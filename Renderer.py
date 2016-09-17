@@ -3,17 +3,30 @@
 """
 
 from Note import Note
-from mistune import markdown
+import mistune
+
+
+
+class NoteMarkdownRenderer(mistune.Renderer):
+    def paragraph(self, text):
+        print(text)
+        return "Lel"
+
 
 class NoteRenderer:
     
-    @staticmethod
-    def render(note):
+    def __init__(self):
+        self.renderer = NoteMarkdownRenderer()
+        self.markdown = mistune.Markdown(renderer=self.renderer)
+ 
+    def render(self, note):
         note_content = "# "+note.title+"\n"
         for tag in note.tags:
             note_content += "\#" + tag + " "
         note_content += "\n"
-
         note_content += note.content
-        
-        return markdown(note_content)
+
+        return self.markdown(note_content)
+
+
+    

@@ -1,5 +1,4 @@
 """ The note class
-
 	This class represents a single note(-file)
     
 """
@@ -7,19 +6,19 @@
 import yaml
 
 class Note:
-    title = ""
-    notebook = ""
-    tags = []
-    content = ""
 
     def __init__(self):
-        pass
+        self.title = ""
+        self.notebook = ""
+        self.tags = []
+        self.content = ""
+
 
     def __str__(self):
         return self.notebook + ": " + self.title + self.content[:10]
-
+    
     @staticmethod
-    def load(filename):
+    def load(filename, only_metadata=False):
         result = Note()
 
         with open(filename, 'r') as file:
@@ -33,6 +32,8 @@ class Note:
             for line in file:
                 if(line == "---\n"):
                     reading_metadata = False
+                    if only_metadata:
+                        break
                 else:
                     if(reading_metadata):
                         metadata_block += line
@@ -62,6 +63,13 @@ class Note:
             if len(content_block) is not 0:
                 result.content = content_block
         return result
+
+class NoteDirectory:
+    def __init__(self, path):
+        self.path = str(path)
+    
+    def __str__(self):
+        return self.path
 
 class NoteFileMalformedError(Exception):
     pass
