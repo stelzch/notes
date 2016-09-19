@@ -8,10 +8,7 @@ import mistune
 
 
 class NoteMarkdownRenderer(mistune.Renderer):
-    def paragraph(self, text):
-        print(text)
-        return "Lel"
-
+    pass
 
 class NoteRenderer:
     
@@ -20,13 +17,11 @@ class NoteRenderer:
         self.markdown = mistune.Markdown(renderer=self.renderer)
  
     def render(self, note):
-        note_content = "# "+note.title+"\n"
-        for tag in note.tags:
-            note_content += "\#" + tag + " "
-        note_content += "\n"
-        note_content += note.content
+        note_content = note.content
 
         return self.markdown(note_content)
 
+r = NoteRenderer()
 
-    
+def render_note(note):
+    return r.render(note)

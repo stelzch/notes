@@ -1,0 +1,33 @@
+#file-list {
+    list-style-type: none;
+    font-size: 18px;
+    line-height: 26px;
+    vertical-align: middle;
+}
+#file-list li {
+    text-transform: uppercase;
+    font-family: "Lucida Console", Monaco, monospace;
+    font-weight: 400;
+    padding: 2px;
+    padding-left: 10px;
+}
+#file-list :hover {
+    background-color: #ccc;
+    border-radius: 3px 3px 3px;
+}
+
+#file-list li:not(:last-child) {
+    margin-bottom: 12px;
+}
+
+#file-list a {
+    color: black;
+    text-decoration: none;
+}
+
+.fa {
+    font-size: 26px;
+    padding-top: 2px;
+    color: #333;
+    vertical-align: bottom;
+}

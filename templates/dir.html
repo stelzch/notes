@@ -1,17 +1,22 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Notes for you</title>
-</head>
-<body>
-    <div class="content">
-    {% for note in notes %}
-    <div>
-        <h3>{{ note.title }}</h3>
-        <sub>{{ note.tags }}</sub>
-        {{ note.content }}
-    </div> <!-- /note -->  
-    {% endfor %}
-    </div> <!-- /content -->
-<body>
+{% extends "base.html" %}
+{% block title %}Some dir{% endblock %}
+{% block head %}
+<!-- Head -->
+{{ super() }}
+<link rel="stylesheet" href="static/dir.css"></link>
+{% endblock %}
+{% block body %}
+<div id="content">
+    <h1>{{ dirname }}</h1>
+    
+    <ul id="file-list">
+        {% for folder in folders %}
+        <li><i class="fa fa-folder-o"></i> {{ folder }}</li>
+        {% endfor %}
+        
+        {% for file in files %}
+        <li><a href="{{ root }}/{{file.path}}"><i class="fa fa-file-text-o"></i> {{ file.title }}</a></li>
+        {% endfor %} 
+    </ul>
+</div>
+{% endblock %}

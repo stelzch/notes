@@ -5,13 +5,15 @@
 
 import yaml
 from collections import namedtuple
+from pathlib import Path
 
-Note = namedtuple("Note", ["title", "tags", "content"])
+Note = namedtuple("Note", ["title", "tags", "content", "path"])
 Notebook = namedtuple("Notebook", ["title", "parent"])
 def load_note(filename, only_metadata=False):
     result_title = ""
     result_tags = ""
     result_content = ""
+    path = Path(filename)
     with open(filename, 'r') as file:
         if(file.readline() != "---\n"):
             raise NoteFileMalformedError("Doesn't start with metadata")
@@ -45,7 +47,7 @@ def load_note(filename, only_metadata=False):
                 result_tags = metadata["tags"]
     if len(content_block) is not 0:
         result_content = content_block
-    return Note(result_title, result_tags, result_content)
+    return Note(result_title, result_tags, result_content, path.name)
 
 class NoteFileMalformedError(Exception):
     pass

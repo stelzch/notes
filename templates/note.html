@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}{{ note.title }}{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block body %}
+<div id="content">
+    {{ render|safe }}
+</div>
+{% endblock %}
