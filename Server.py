@@ -1,7 +1,8 @@
-from flask import Flask
+from flask import Flask, render_template
 from os.path import join as path_join
+import os
 from pathlib import Path
-from Note import Note, NoteDirectory
+from Note import Note, Notebook, load_note
 
 app = Flask(__name__)
 
@@ -15,24 +16,26 @@ class Database:
         self.root = '/home/cstelz/Notes/notes'
 
     def get_dir(self, path=''):
-        dirs = files = []
+        dirs = list()
+        files = list()
         p = Path(path_join(self.root, path))
         
         if not p.is_dir():
             raise DatabaseReadError('Given Path is not a directory')
         else:
-            for file in p.iterdir():
-                suffixes = file.suffixes
-                """ Go through all Markdown files in the directory """
-                if file.is_dir():
-                    dirs.append(NoteDirectory(str(file)))
-                else:
-                    if len(suffixes) > 0:
-                        if suffixes[-1] is  ".md":
-                            print("Found Markdown ", str(file))
-                            files.append(Note.load(str(file), only_meta=True))
-                    
-        return result
+            r_files = []
+            r_dirs = []
+            for root, dirs, files in os.walk(str(p)):
+                print(root)
+                for name in files:
+                    if name.endswith(".md"):
+                        path = path_join(root, name)
+                        r_files.append(load_note(path, only_metadata=True))
+                for name in dirs:
+                    r_dirs.append(Notebook(name, "Not"))
+        print(r_files)
+        print(r_dirs)
+        return (r_files, r_dirs)
 
 class DatabaseReadError(Exception):
     pass
@@ -41,8 +44,8 @@ db = Database()
 
 @app.route('/')
 def index():
+    files, dirs = db.get_dir()
+    print(files)
+    return render_template("dir.html", notes=files)
 
-    return str(db.get_dir())
 
-
-app.run(host='0.0.0.0', port=8080)

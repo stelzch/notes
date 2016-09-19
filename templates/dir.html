@@ -2,11 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Notes for you</titles>
+    <title>Notes for you</title>
 </head>
 <body>
-    {% for file in file_list %}
-        {{ file.title }}
+    <div class="content">
+    {% for note in notes %}
+    <div>
+        <h3>{{ note.title }}</h3>
+        <sub>{{ note.tags }}</sub>
+        {{ note.content }}
+    </div> <!-- /note -->  
     {% endfor %}
-</body>
-</html>
+    </div> <!-- /content -->
+<body>
