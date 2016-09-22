@@ -22,11 +22,11 @@ class NoteMarkdownRenderer(mistune.Renderer):
             content_ = lines[1:]
             content = ""
             for line in content_:
-                content += line
+                content += line + "\n"
             caption = mistune.markdown(caption)
             content = mistune.markdown(content)
             print(content)
-            return '\n<div class="box">\n<div class="caption">%s</div>\n%s\n</div>' % (caption, content)
+            return '\n<div class="box">\n<div class="caption">%s</div>\n<div class="content">%s</div>\n</div>' % (caption, content)
         lexer = get_lexer_by_name(lang, stripall=True)
         formatter = HtmlFormatter(noclasses=True, style='monokai')
         result = highlight(code, lexer, formatter)
