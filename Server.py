@@ -3,6 +3,7 @@ from os.path import join as path_join
 import os
 from pathlib import Path
 from Note import Note, Notebook, load_note
+from Renderer import render_note
 
 app = Flask(__name__)
 
@@ -18,24 +19,31 @@ class Database:
     def get_dir(self, path=''):
         dirs = list()
         files = list()
-        p = Path(path_join(self.root, path))
-        
+        p = Path(path_join(self.root, path)) 
         if not p.is_dir():
             raise DatabaseReadError('Given Path is not a directory')
         else:
-            r_files = []
-            r_dirs = []
-            for root, dirs, files in os.walk(str(p)):
-                print(root)
-                for name in files:
-                    if name.endswith(".md"):
-                        path = path_join(root, name)
-                        r_files.append(load_note(path, only_metadata=True))
-                for name in dirs:
-                    r_dirs.append(Notebook(name, "Not"))
-        print(r_files)
-        print(r_dirs)
-        return (r_files, r_dirs)
+            for file in p.iterdir():
+                if file.is_dir():
+                    dirs.append(str(file))
+                else:
+                    if file.suffix == ".md":
+                        files.append(load_note(str(file), True)
+        return (files, dirs)
+
+    def get_note(self, path):
+        notefile = Path(path_join(self.root, path))
+
+        """ Security checks go first: We need to check if the given file
+            exists at all
+        """
+        print("Loading "+str(notefile))
+        if not notefile.is_file():
+            print("Couldn't find "+notefile.read_text())
+            raise DatabaseReadError("Notefile couldn't be read.")
+        note = load_note(str(notefile))
+        return(note)
+
 
 class DatabaseReadError(Exception):
     pass
@@ -44,8 +52,26 @@ db = Database()
 
 @app.route('/')
 def index():
+    ret = view_dir('')
+    return ret
+
+@app.route('/<path:note>.md')
+def view_note(note):
+    try:
+        notef = db.get_note(note+".md")
+    except DatabaseReadError as e:
+        return "404"
+    rendered = render_note(notef)
+    return render_template("note.html", note=notef,
+                                        render=rendered)
+                                        
+
+@app.route('/<path:directory>')
+def view_dir(directory):
     files, dirs = db.get_dir()
-    print(files)
-    return render_template("dir.html", notes=files)
-
-
+    dirs.sort()
+    files.sort()
+    return render_template("dir.html", dirname=directory,
+                                       files=files,
+                                       folders=dirs,
+                                       root=directory)

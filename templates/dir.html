@@ -11,7 +11,7 @@
     
     <ul id="file-list">
         {% for folder in folders %}
-        <li><i class="fa fa-folder-o"></i> {{ folder }}</li>
+        <li><a href="{{ root }}/{{ folder }}"><i class="fa fa-folder-o"></i> {{ folder }}</a></li>
         {% endfor %}
         
         {% for file in files %}
