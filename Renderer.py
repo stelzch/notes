@@ -8,6 +8,8 @@ import mistune
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters import HtmlFormatter
+from pygments.styles import get_style_by_name
+
 
 class NoteMarkdownRenderer(mistune.Renderer):
     def block_code(self, code, lang):
@@ -20,14 +22,15 @@ class NoteMarkdownRenderer(mistune.Renderer):
             content_ = lines[1:]
             content = ""
             for line in content_:
-                content += (line + "<br>")
+                content += line
+            caption = mistune.markdown(caption)
+            content = mistune.markdown(content)
+            print(content)
             return '\n<div class="box">\n<div class="caption">%s</div>\n%s\n</div>' % (caption, content)
-        print("Highlighting %s: %s" % (lang, code))
         lexer = get_lexer_by_name(lang, stripall=True)
-        formatter = HtmlFormatter(full=True)
+        formatter = HtmlFormatter(noclasses=True, style='monokai')
         result = highlight(code, lexer, formatter)
-        print(result)
-        return highlight(code, lexer, formatter)
+        return result
 
 class NoteRenderer:
     
