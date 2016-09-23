@@ -14,25 +14,29 @@ app = Flask(__name__)
 class Database:
 
     def __init__(self):
-        self.root = '/home/cstelz/Notes/notes'
+        self.root = Path('/home/christoph/Projects/Notes/notes')
 
     def get_dir(self, path=''):
         dirs = list()
         files = list()
-        p = Path(path_join(self.root, path)) 
+        p = Path(path_join(str(self.root), path))
+        if path is not '':
+            parent = p.parent.relative_to(self.root)
+        else:
+            parent = ""
         if not p.is_dir():
             raise DatabaseReadError('Given Path is not a directory')
         else:
             for file in p.iterdir():
                 if file.is_dir():
-                    dirs.append(str(file))
+                    dirs.append(file.name)
                 else:
                     if file.suffix == ".md":
-                        files.append(load_note(str(file), True)
-        return (files, dirs)
+                        files.append(load_note(str(file), True))
+        return files, dirs, parent
 
     def get_note(self, path):
-        notefile = Path(path_join(self.root, path))
+        notefile = Path(path_join(str(self.root), path))
 
         """ Security checks go first: We need to check if the given file
             exists at all
@@ -68,10 +72,11 @@ def view_note(note):
 
 @app.route('/<path:directory>')
 def view_dir(directory):
-    files, dirs = db.get_dir()
+    files, dirs, parent = db.get_dir(directory)
     dirs.sort()
     files.sort()
     return render_template("dir.html", dirname=directory,
                                        files=files,
                                        folders=dirs,
-                                       root=directory)
+                                       root=directory,
+                                       parent=parent)

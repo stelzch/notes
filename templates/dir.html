@@ -7,6 +7,11 @@
 {% endblock %}
 {% block body %}
 <div id="content">
+    {% if root != "" %}
+    <div class="back-arrow">
+        <a href="/{{ parent }}"><i class="fa fa-chevron-up"></i></a>
+    </div>
+    {% endif %}
     <h1>{{ dirname }}</h1>
     
     <ul id="file-list">
