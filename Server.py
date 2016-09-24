@@ -38,6 +38,7 @@ class Database:
 
     def get_note(self, path):
         notefile = Path(path_join(str(self.root), path))
+        parent = notefile.parent.relative_to(self.root)
 
         """ Security checks go first: We need to check if the given file
             exists at all
@@ -47,7 +48,7 @@ class Database:
             print("Couldn't find "+notefile.read_text())
             raise DatabaseReadError("Notefile couldn't be read.")
         note = load_note(str(notefile))
-        return(note)
+        return note, parent
 
 
 class DatabaseReadError(Exception):
@@ -63,11 +64,12 @@ def index():
 @app.route('/<path:note>.md')
 def view_note(note):
     try:
-        notef = db.get_note(note+".md")
+        notef, parent = db.get_note(note+".md")
     except DatabaseReadError as e:
         return "404"
     rendered = render_note(notef)
     return render_template("note.html", note=notef,
+                                        root=parent,
                                         render=rendered)
                                         
 

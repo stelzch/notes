@@ -9,12 +9,17 @@
 <div id="content">
     {% if root != "" %}
     <div class="back-arrow">
-        <a href="/{{ parent }}"><i class="fa fa-chevron-up"></i></a>
+        <a href="/{{ parent }}"><i class="fa fa-chevron-left"></i></a>
     </div>
     {% endif %}
     <h1>{{ dirname }}</h1>
     
     <ul id="file-list">
+        {% if folders == [] %}
+        <li class="message">
+            Empty
+        </li>
+        {% endif %}
         {% for folder in folders %}
         <li><a href="{{ root }}/{{ folder }}"><i class="fa fa-folder-o"></i> {{ folder }}</a></li>
         {% endfor %}
