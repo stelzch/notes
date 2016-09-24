@@ -14,7 +14,7 @@ app = Flask(__name__)
 class Database:
 
     def __init__(self):
-        self.root = Path('/home/christoph/Projects/Notes/notes')
+        self.root = Path(os.getcwd()+"/notes")
 
     def get_dir(self, path=''):
         dirs = list()
@@ -32,6 +32,7 @@ class Database:
                     dirs.append(file.name)
                 else:
                     if file.suffix == ".md":
+                        print("Loading note %s" % file)
                         files.append(load_note(str(file), True))
         return files, dirs, parent
 
