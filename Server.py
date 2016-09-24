@@ -17,6 +17,22 @@ class Database:
         self.root = Path(os.getcwd()+"/notes")
 
     def get_dir(self, path=''):
+        """Loads a list of subdirs and files from a directory
+
+        Args:
+            path: the relative path
+
+        Returns:
+            A tuple of files, dirs and parent found
+            
+            - files is a list of the named note-tuple with an empty content variable
+            - dirs is a list of directory names
+            - parent is the path to the parent directory relative to the databases root dir
+
+
+        Raises:
+            DatabaseReadError: The given path wasn't a directory
+        """
         dirs = list()
         files = list()
         p = Path(path_join(str(self.root), path))
@@ -37,6 +53,20 @@ class Database:
         return files, dirs, parent
 
     def get_note(self, path):
+        """Loads a single note from the given path
+
+        Args:
+            path: the relative path to the notefile from the databases root directory
+
+        Returns:
+            A named-tuple note object
+
+        Raises:
+            DatabaseReadError: The given path didn't point at a file
+            NoteFileMalformedError: The notefile has an invalid structure or metadata is missing
+
+
+        """
         notefile = Path(path_join(str(self.root), path))
         parent = notefile.parent.relative_to(self.root)
 
@@ -83,3 +113,4 @@ def view_dir(directory):
                                        folders=dirs,
                                        root=directory,
                                        parent=parent)
+
