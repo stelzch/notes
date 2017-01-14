@@ -19,3 +19,15 @@ This is a program helping you to take notes. You can easily include tables:
 
 ## Images
 ![Cool space pic](picture0.jpg)
+
+## Formulas
+$t'=\frac{1}{\sqrt{1-(\frac{v}{c})^2}}$
+
+## Code
+```python
+import sys
+
+print("Hello World")
+
+sys.exit(0)
+```

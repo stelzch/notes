@@ -1,16 +1,29 @@
 <!doctype html>
 <html>
-    <head>
-        {% block head %}
-        <meta charset="utf-8">
-        <title>{% block title %}{% endblock %}</title>
-        <link rel="stylesheet" href="/static/base.css"></link>
-        <link rel="stylesheet" href="/static/fa/css/font-awesome.min.css"></link>
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}
+	<head>
+		{% block head %}
+		<meta charset="utf-8">
+		<title>{% block title %}{% endblock %}</title>
+		<link rel="stylesheet" href="/static/base.css"></link>
+		<link rel="stylesheet" href="/static/fa/css/font-awesome.min.css"></link>
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Config({
+			extensions: ["tex2jax.js"],
+			jax: ["input/TeX", "output/HTML-CSS"],
+			tex2jax: {
+			  inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+			  displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+			  processEscapes: true
+			},
+			"HTML-CSS": { availableFonts: ["TeX"] }
+		});
+		</script>
+	   <script type="text/javascript" src="/static/scripts/MathJax/MathJax.js?config=TeX-AMS_CHTML"></script>
+		{% endblock %}
+	</head>
+	<body>
+		{% block body %}
 
-        {% endblock %}
-    </body>
+		{% endblock %}
+	</body>
 </html>
