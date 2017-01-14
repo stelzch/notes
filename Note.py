@@ -47,6 +47,7 @@ def load_note(filename, only_metadata=False):
                 result_tags = metadata["tags"]
     if len(content_block) is not 0:
         result_content = content_block
+    print("Read note with path name: %s" % path.name)
     return Note(result_title, result_tags, result_content, path.name)
 
 class NoteFileMalformedError(Exception):

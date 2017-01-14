@@ -3,7 +3,7 @@
 {% block head %}
 <!-- Head -->
 {{ super() }}
-<link rel="stylesheet" href="static/dir.css"></link>
+<link rel="stylesheet" href="/static/dir.css"></link>
 {% endblock %}
 {% block body %}
 <div id="content">
@@ -21,11 +21,16 @@
         </li>
         {% endif %}
         {% for folder in folders %}
-        <li><a href="{{ root }}/{{ folder }}"><i class="fa fa-folder-o"></i> {{ folder }}</a></li>
+	<!-- Folder {{ folder }} in {{ dirname }} with parent {{ parent }} -->
+	{% if parent %}
+	  <li><a href="/{{ dirname }}/{{ folder }}"><i class="fa fa-folder-o"></i> {{ folder }}</a></li>
+	{% else %}
+	  <li><a href="{{ folder }}"><i class="fa fa-folder-o"></i> {{ folder}}</a></li>
+	{% endif %}
         {% endfor %}
         
         {% for file in files %}
-        <li><a href="{{ root }}/{{file.path}}"><i class="fa fa-file-text-o"></i> {{ file.title }}</a></li>
+        <li><a href="{{ file.path}}"><i class="fa fa-file-text-o"></i> {{ file.title }}</a></li>
         {% endfor %} 
     </ul>
 </div>

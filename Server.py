@@ -1,9 +1,10 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, send_file
 from os.path import join as path_join
 import os
 from pathlib import Path
 from Note import Note, Notebook, load_note
 from Renderer import render_note
+from mimetypes import guess_type as guess_mime_type
 
 app = Flask(__name__)
 
@@ -40,9 +41,7 @@ class Database:
             parent = p.parent.relative_to(self.root)
         else:
             parent = ""
-        if not p.is_dir():
-            raise DatabaseReadError('Given Path is not a directory')
-        else:
+        if p.is_dir():
             for file in p.iterdir():
                 if file.is_dir():
                     dirs.append(file.name)
@@ -79,7 +78,20 @@ class Database:
             raise DatabaseReadError("Notefile couldn't be read.")
         note = load_note(str(notefile))
         return note, parent
+    def get_media(self, file):
+        """Loads a media file from the given path
 
+        Args:
+            file: the relative path to the file that should be retrieved, e.g. dir/image.png
+
+        Returns:
+            A tuple with the absolute filepath and the mimetype
+
+        """
+        p = str(Path(path_join(str(self.root), file)))
+        mime = str(guess_mime_type(p)[0])
+        print("Reading file "+p+"with mime "+mime)
+        return (p, mime)
 
 class DatabaseReadError(Exception):
     pass
@@ -91,7 +103,6 @@ def index():
     ret = view_dir('')
     return ret
 
-@app.route('/<path:note>.md')
 def view_note(note):
     try:
         notef, parent = db.get_note(note+".md")
@@ -101,13 +112,28 @@ def view_note(note):
     return render_template("note.html", note=notef,
                                         root=parent,
                                         render=rendered)
-                                        
+
+@app.route('/<path:file>.<string:ext>')
+def view_file(file, ext):
+    if ext in ["jpeg", "jpg", "png", "svg", "txt"]:
+        path, mime = db.get_media(file+"."+ext)
+        return send_file(path, mimetype=mime)
+    elif ext in ["md"]:
+        return view_note(file)
+    else:
+        print("ERROR: invalid file extension requested: "+str(ext))
+        return ""
 
 @app.route('/<path:directory>')
 def view_dir(directory):
+    print("Listing directory %s" % directory)
+    if directory == "favicon.ico":
+        print("Catched favicon")
+        return "404"
     files, dirs, parent = db.get_dir(directory)
     dirs.sort()
     files.sort()
+    print("Listing with root %s" % directory)
     return render_template("dir.html", dirname=directory,
                                        files=files,
                                        folders=dirs,
