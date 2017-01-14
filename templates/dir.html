@@ -30,7 +30,12 @@
         {% endfor %}
         
         {% for file in files %}
+	{% if parent %}
 	<li><a href="/view/{{ dirname }}/{{ file.path}}"><i class="fa fa-file-text-o"></i> {{ file.title }}</a></li>
+	{% else %}
+	<li><a href="/view/{{file.path}}"><i class="fa fa-file-text-o"></i> {{ file.title
+		}}</a></li>
+	{% endif %}
         {% endfor %} 
     </ul>
 </div>

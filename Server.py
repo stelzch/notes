@@ -110,7 +110,7 @@ def view_note(note):
         return "404"
     rendered = render_note(notef)
     return render_template("note.html", note=notef,
-                                        root=parent,
+                                        parent=parent,
                                         render=rendered)
 
 @app.route('/view/<path:file>.<string:ext>')
