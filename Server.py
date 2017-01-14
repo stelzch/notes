@@ -113,7 +113,7 @@ def view_note(note):
                                         root=parent,
                                         render=rendered)
 
-@app.route('/<path:file>.<string:ext>')
+@app.route('/view/<path:file>.<string:ext>')
 def view_file(file, ext):
     if ext in ["jpeg", "jpg", "png", "svg", "txt"]:
         path, mime = db.get_media(file+"."+ext)
@@ -139,4 +139,3 @@ def view_dir(directory):
                                        folders=dirs,
                                        root=directory,
                                        parent=parent)
-
