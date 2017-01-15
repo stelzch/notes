@@ -4,6 +4,7 @@
 
 from Note import Note
 import mistune
+import logging
 """ The Pygment Highlighter """
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name
@@ -14,7 +15,7 @@ from pygments.styles import get_style_by_name
 class NoteMarkdownRenderer(mistune.Renderer):
     def block_code(self, code, lang):
         if not lang:
-            print("No language for "+code)
+            logging.error("Invalid highlighting language %s" % code)
             return '\n<pre><code>%s</code></pre>\n' % mistune.escape(code)
         if lang == "_box":
             lines = code.split("\n")
@@ -25,11 +26,11 @@ class NoteMarkdownRenderer(mistune.Renderer):
                 content += line + "\n"
             caption = mistune.markdown(caption)
             content = mistune.markdown(content)
-            print(content)
             return '\n<div class="box">\n<div class="caption">%s</div>\n<div class="content">%s</div>\n</div>' % (caption, content)
         lexer = get_lexer_by_name(lang, stripall=True)
-        formatter = HtmlFormatter(noclasses=True, style='monokai')
+        formatter = HtmlFormatter(noclasses=False, style='monokai', cssclass='codeHighlight')
         result = highlight(code, lexer, formatter)
+        result = '<style>'+formatter.get_style_defs()+'</style>\n'+result
         return result
 
 class NoteRenderer:

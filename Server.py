@@ -1,3 +1,4 @@
+import logging
 from flask import Flask, render_template, send_file
 from os.path import join as path_join
 import os
@@ -47,7 +48,7 @@ class Database:
                     dirs.append(file.name)
                 else:
                     if file.suffix == ".md":
-                        print("Loading note %s" % file)
+                        logging.debug("Listing note %s" % file)
                         files.append(load_note(str(file), True))
         return files, dirs, parent
 
@@ -72,9 +73,9 @@ class Database:
         """ Security checks go first: We need to check if the given file
             exists at all
         """
-        print("Loading "+str(notefile))
+        logging.debug("Loading note %s" % str(notefile))
         if not notefile.is_file():
-            print("Couldn't find "+notefile.read_text())
+            logging.error("Couldn't find %s" % notefile.read_text())
             raise DatabaseReadError("Notefile couldn't be read.")
         note = load_note(str(notefile))
         return note, parent
@@ -90,7 +91,7 @@ class Database:
         """
         p = str(Path(path_join(str(self.root), file)))
         mime = str(guess_mime_type(p)[0])
-        print("Reading file "+p+"with mime "+mime)
+        logging.debug("Reading media %s, mimetype %s" % (p, mime))
         return (p, mime)
 
 class DatabaseReadError(Exception):
@@ -107,6 +108,7 @@ def view_note(note):
     try:
         notef, parent = db.get_note(note+".md")
     except DatabaseReadError as e:
+        logging.error("Couldn't load %s" % note)
         return "404"
     rendered = render_note(notef)
     return render_template("note.html", note=notef,
@@ -121,19 +123,16 @@ def view_file(file, ext):
     elif ext in ["md"]:
         return view_note(file)
     else:
-        print("ERROR: invalid file extension requested: "+str(ext))
+        logging.error("Invalid file requested: %s.%s" % (file, ext))
         return ""
 
 @app.route('/<path:directory>')
 def view_dir(directory):
-    print("Listing directory %s" % directory)
-    if directory == "favicon.ico":
-        print("Catched favicon")
-        return "404"
+    logging.info("Listing directory %s" % directory)
     files, dirs, parent = db.get_dir(directory)
     dirs.sort()
     files.sort()
-    print("Listing with root %s" % directory)
+    logging.info("Listing with root %s" % directory)
     return render_template("dir.html", dirname=directory,
                                        files=files,
                                        folders=dirs,

@@ -39,8 +39,8 @@ body {
 h1 {
     text-align: center;
     color: #333;
-    margin-bottom: 3em;
-    text-decoration: underline;
+    margin-bottom: 2em;
+    font-weight: bold;
 }
 
 @media screen and (max-width: 720px) {

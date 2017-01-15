@@ -1,7 +1,7 @@
 CACHE MANIFEST
 NO CACHE:
-/favicon.ico
-/fa/css/font-awesome.min.css
-/fa/fonts/fontawesome-webfont.*
-/fonts/*
-/scripts/MathJax/MathJax.js
+/static/favicon.ico
+/static/fa/css/font-awesome.min.css
+/static/fa/fonts/fontawesome-webfont.*
+/static/fonts/*
+/static/scripts/MathJax.js
