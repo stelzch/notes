@@ -1,10 +1,16 @@
-#Notes - Manage your thoughts with a CLI
 
+# Notes.md - the easy way to take notes
 
-## Why?
-Because why not? We all know, the commandline offers you incredible efficency. Yeah, I know, GUIs come in handy, but hey, real linuxers use bash, ok?
+### What it is
+Notes.md is a web frontend for notes taken in markdown.
 
-## How?
-You write your notes with the text editor of your choice. They may contain Markdown Syntax, MathJax formulas or code snippets. Then, you fire up a web browser and view the results. Or, if you really got balls, you upload it directly to share it with your friends - as html or pdf. Again, your choice.
+### How it works
+You write your notes with a text editor of your choice. Then start Notes.md and admire the beauty of the rendered result.
 
-
+### Features
+* full markdown support, including extended features like
+	- tables
+	- code highlighting
+* [MathJax](https://www.mathjax.org) for mathematical formulas
+* easy YAML-metadata
+* the freedom of choosing your editor
